@@ -1,37 +1,25 @@
 package rocks.tiger.imagemanager.tags
 
-import de.jodamob.kotlin.testrunner.OpenedClasses
-import de.jodamob.kotlin.testrunner.SpotlinTestRunner
-import org.junit.runner.RunWith
+import rocks.tiger.imagemanager.support.MockTaggedItem
 import spock.lang.Specification
 
-@RunWith(SpotlinTestRunner)
-@OpenedClasses(Tags)
 class ItemPoolTest extends Specification {
 	def "add item should subscribe"() {
 		given:
 		def pool = new ItemPool()
-		def item = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> [].iterator()
-			}
-		}
+		def item = new MockTaggedItem()
 
 		when:
 		pool.add(item)
 
 		then:
-		1 * item.tags.subscribe(pool)
+		item.hasSubscribedWith(pool)
 	}
 
 	def "add should add item"() {
 		given:
 		def pool = new ItemPool()
-		def item = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> [].iterator()
-			}
-		}
+		def item = new MockTaggedItem()
 
 		expect:
 		pool.add(item)
@@ -45,11 +33,7 @@ class ItemPoolTest extends Specification {
 	def "remove item should unsubscribe"() {
 		given:
 		def pool = new ItemPool()
-		def item = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> [].iterator()
-			}
-		}
+		def item = new MockTaggedItem()
 
 		and:
 		pool.add(item)
@@ -58,17 +42,13 @@ class ItemPoolTest extends Specification {
 		pool.remove(item)
 
 		then:
-		1 * item.tags.unsubscribe(pool)
+		item.hasUnSubscribedWith(pool)
 	}
 
 	def "remove should remove item"() {
 		given:
 		def pool = new ItemPool()
-		def item = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> [].iterator()
-			}
-		}
+		def item = new MockTaggedItem()
 
 		and:
 		pool.add(item)
@@ -85,11 +65,7 @@ class ItemPoolTest extends Specification {
 	def "clear should unsubscribe"() {
 		given:
 		def pool = new ItemPool()
-		def item = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> [].iterator()
-			}
-		}
+		def item = new MockTaggedItem()
 
 		and:
 		pool.add(item)
@@ -98,17 +74,13 @@ class ItemPoolTest extends Specification {
 		pool.clear()
 
 		then:
-		1 * item.tags.unsubscribe(pool)
+		item.hasUnSubscribedWith(pool)
 	}
 
 	def "clear should remove item"() {
 		given:
 		def pool = new ItemPool()
-		def item = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> [].iterator()
-			}
-		}
+		def item = new MockTaggedItem()
 
 		and:
 		pool.add(item)
@@ -124,21 +96,9 @@ class ItemPoolTest extends Specification {
 	def "filter should return correct items"() {
 		given:
 		def pool = new ItemPool()
-		def item1 = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> ["1", "2"].iterator()
-			}
-		}
-		def item2 = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> ["2", "3"].iterator()
-			}
-		}
-		def item3 = Mock(TaggedItem) {
-			getTags() >> Mock(Tags) {
-				iterator() >> ["3", "4"].iterator()
-			}
-		}
+		def item1 = new MockTaggedItem("1 2")
+		def item2 = new MockTaggedItem("2 3")
+		def item3 = new MockTaggedItem("3 4")
 
 		and:
 		pool.add(item1)

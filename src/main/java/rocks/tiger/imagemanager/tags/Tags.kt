@@ -4,7 +4,7 @@ class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
 	private val subscribers = mutableSetOf<TagsSubscriber>()
 
 	constructor(parent: TaggedItem, tags: String) : this(parent) {
-		tags.trim().split("\\s+".toRegex()).map { Tag(it) }.forEach { this.add(it) }
+		addAll(tags)
 	}
 
 	override fun add(element: Tag): Boolean {
@@ -14,6 +14,10 @@ class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
 		}
 
 		return result
+	}
+
+	fun addAll(tags: String) {
+		tags.trim().split("\\s+".toRegex()).map { Tag(it) }.forEach { this.add(it) }
 	}
 
 	override fun remove(element: Tag): Boolean {

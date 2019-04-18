@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<images version="1">
+	<image id="16b8c961-0b76-4fd9-88b0-3bcc19b7548d">
+		<hash type="sha1">2346ad27d7568ba9896f1b7da6b5991251debdf2</hash>
+		<path>C:\image.jpg</path>
+		<tags>tag1 tag2 tag3</tags>
+	</image>
+</images>

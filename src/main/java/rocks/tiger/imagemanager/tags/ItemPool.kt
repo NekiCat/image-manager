@@ -4,20 +4,20 @@ class ItemPool : TagsSubscriber, HashSet<TaggedItem>() {
 	private val tagIndex = Index<Tag, TaggedItem>()
 
 	override fun add(element: TaggedItem): Boolean {
-		element.tags.subscribe(this)
+		element.subscribe(this)
 		tagIndex.add(element.tags, element)
 
 		return super.add(element)
 	}
 
 	override fun clear() {
-		this.forEach { it.tags.unsubscribe(this) }
+		this.forEach { it.unsubscribe(this) }
 		tagIndex.clear()
 		super.clear()
 	}
 
 	override fun remove(element: TaggedItem): Boolean {
-		element.tags.unsubscribe(this)
+		element.unsubscribe(this)
 		tagIndex.remove(element.tags, element)
 
 		return super.remove(element)
