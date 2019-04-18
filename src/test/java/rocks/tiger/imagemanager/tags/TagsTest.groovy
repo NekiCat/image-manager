@@ -3,6 +3,34 @@ package rocks.tiger.imagemanager.tags
 import spock.lang.Specification
 
 class TagsTest extends Specification {
+	def "constructor should take tags"() {
+		given:
+		def item = Mock(TaggedItem)
+
+		when:
+		def tags = new Tags(item, "these are tags")
+
+		then:
+		tags.size() == 3
+		tags.any { it.tag == "these" }
+		tags.any { it.tag == "are" }
+		tags.any { it.tag == "tags" }
+	}
+
+	def "toString should make tags"() {
+		given:
+		def item = Mock(TaggedItem)
+		def tags = new Tags(item)
+
+		and:
+		tags.add(new Tag("tag1"))
+		tags.add(new Tag("tag2"))
+		tags.add(new Tag("tag3"))
+
+		expect:
+		tags.toString() == "tag1 tag2 tag3"
+	}
+
 	def "should save tags"() {
 		given:
 		def item = Mock(TaggedItem)

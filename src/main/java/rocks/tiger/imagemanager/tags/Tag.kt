@@ -15,7 +15,7 @@ class Tag(tag: String) {
 		return tag == other.tag
 	}
 
-	override fun hashCode(): Int {
-		return tag.hashCode()
-	}
+	override fun hashCode() = tag.hashCode()
+
+	override fun toString() = tag
 }

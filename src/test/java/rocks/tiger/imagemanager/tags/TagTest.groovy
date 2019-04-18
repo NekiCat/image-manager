@@ -48,4 +48,12 @@ class TagTest extends Specification {
 		tag1 != tag2
 		tag1.hashCode() != tag2.hashCode()
 	}
+
+	def "tag should return from toString"() {
+		given:
+		def tag = new Tag("tag")
+
+		expect:
+		tag.toString() == "tag"
+	}
 }

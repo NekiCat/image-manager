@@ -3,6 +3,10 @@ package rocks.tiger.imagemanager.tags
 class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
 	private val subscribers = mutableSetOf<TagsSubscriber>()
 
+	constructor(parent: TaggedItem, tags: String) : this(parent) {
+		tags.trim().split("\\s+".toRegex()).map { Tag(it) }.forEach { this.add(it) }
+	}
+
 	override fun add(element: Tag): Boolean {
 		val result = super.add(element)
 		if (result) {
@@ -44,4 +48,6 @@ class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
 	fun unsubscribe(subscriber: TagsSubscriber) {
 		subscribers.remove(subscriber)
 	}
+
+	override fun toString() = joinToString(" ")
 }
