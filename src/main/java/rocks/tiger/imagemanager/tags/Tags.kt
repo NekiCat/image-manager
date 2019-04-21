@@ -1,16 +1,22 @@
 package rocks.tiger.imagemanager.tags
 
-class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
-	private val subscribers = mutableSetOf<TagsSubscriber>()
+import rocks.tiger.imagemanager.EventSourceContainer
 
-	constructor(parent: TaggedItem, tags: String) : this(parent) {
+class Tags() : HashSet<Tag>() {
+	private val addEvent = EventSourceContainer<Tag>()
+	private val removeEvent = EventSourceContainer<Tag>()
+
+	val onAdd = addEvent.source
+	val onRemove = removeEvent.source
+
+	constructor(tags: String) : this() {
 		addAll(tags)
 	}
 
 	override fun add(element: Tag): Boolean {
 		val result = super.add(element)
 		if (result) {
-			onAdd(element)
+			addEvent(element)
 		}
 
 		return result
@@ -23,7 +29,7 @@ class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
 	override fun remove(element: Tag): Boolean {
 		val result = super.remove(element)
 		if (result) {
-			onRemove(element)
+			removeEvent(element)
 		}
 
 		return result
@@ -31,26 +37,10 @@ class Tags(private val parent: TaggedItem) : HashSet<Tag>() {
 
 	override fun clear() {
 		for (tag in this) {
-			onRemove(tag)
+			removeEvent(tag)
 		}
 
 		super.clear()
-	}
-
-	private fun onAdd(tag: Tag) {
-		subscribers.forEach { subscriber -> subscriber.onTagAdded(tag, parent) }
-	}
-
-	private fun onRemove(tag: Tag) {
-		subscribers.forEach { subscriber -> subscriber.onTagRemoved(tag, parent) }
-	}
-
-	fun subscribe(subscriber: TagsSubscriber) {
-		subscribers.add(subscriber)
-	}
-
-	fun unsubscribe(subscriber: TagsSubscriber) {
-		subscribers.remove(subscriber)
 	}
 
 	override fun toString() = joinToString(" ")

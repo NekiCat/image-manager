@@ -1,8 +1,10 @@
 package rocks.tiger.imagemanager.tags
 
-interface TaggedItem {
-	val tags: Tags
+data class TagChangeEvent(val tag: Tag, val item: TaggedItem)
 
-	fun subscribe(subscriber: TagsSubscriber) = tags.subscribe(subscriber)
-	fun unsubscribe(subscriber: TagsSubscriber) = tags.unsubscribe(subscriber)
+abstract class TaggedItem {
+	val tags = Tags()
+
+	open val onAdd = tags.onAdd.map { tag -> TagChangeEvent(tag, this) }
+	open val onRemove = tags.onRemove.map { tag -> TagChangeEvent(tag, this) }
 }

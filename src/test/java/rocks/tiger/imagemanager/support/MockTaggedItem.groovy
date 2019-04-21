@@ -1,40 +1,29 @@
 package rocks.tiger.imagemanager.support
 
-import org.jetbrains.annotations.NotNull
+import rocks.tiger.imagemanager.EventSource
+import rocks.tiger.imagemanager.tags.TagChangeEvent
 import rocks.tiger.imagemanager.tags.TaggedItem
-import rocks.tiger.imagemanager.tags.Tags
-import rocks.tiger.imagemanager.tags.TagsSubscriber
 
-class MockTaggedItem implements TaggedItem {
-	private Tags tags
-	private TagsSubscriber subscriber
-	private TagsSubscriber unSubscriber
+class MockTaggedItem extends TaggedItem {
+	private EventSource<TagChangeEvent> add
+	private EventSource<TagChangeEvent> remove
 
-	public MockTaggedItem(String tags) {
-		if (tags == null) {
-			this.tags = new Tags(this)
-		} else {
-			this.tags = new Tags(this, tags)
+	MockTaggedItem(EventSource<TagChangeEvent> add, EventSource<TagChangeEvent> remove, String tags = null) {
+		this.add = add
+		this.remove = remove
+
+		if (tags != null) {
+			this.tags.addAll(tags)
 		}
 	}
 
-	Tags getTags() {
-		return tags
+	@Override
+	EventSource<TagChangeEvent> getOnAdd() {
+		return add
 	}
 
-	void subscribe(@NotNull TagsSubscriber subscriber) {
-		this.subscriber = subscriber
-	}
-
-	void unsubscribe(@NotNull TagsSubscriber subscriber) {
-		unSubscriber = subscriber
-	}
-
-	boolean hasSubscribedWith(@NotNull TagsSubscriber subscriber) {
-		return this.subscriber == subscriber
-	}
-
-	boolean hasUnSubscribedWith(@NotNull TagsSubscriber subscriber) {
-		return unSubscriber == subscriber
+	@Override
+	EventSource<TagChangeEvent> getOnRemove() {
+		return remove
 	}
 }

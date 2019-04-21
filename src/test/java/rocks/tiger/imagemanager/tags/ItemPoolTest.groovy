@@ -1,5 +1,6 @@
 package rocks.tiger.imagemanager.tags
 
+import rocks.tiger.imagemanager.EventSource
 import rocks.tiger.imagemanager.support.MockTaggedItem
 import spock.lang.Specification
 
@@ -7,19 +8,20 @@ class ItemPoolTest extends Specification {
 	def "add item should subscribe"() {
 		given:
 		def pool = new ItemPool()
-		def item = new MockTaggedItem()
+		def item = new MockTaggedItem(Mock(EventSource), Mock(EventSource))
 
 		when:
 		pool.add(item)
 
 		then:
-		item.hasSubscribedWith(pool)
+		1 * item.getOnAdd().subscribe(_)
+		1 * item.getOnRemove().subscribe(_)
 	}
 
 	def "add should add item"() {
 		given:
 		def pool = new ItemPool()
-		def item = new MockTaggedItem()
+		def item = new MockTaggedItem(Mock(EventSource), Mock(EventSource))
 
 		expect:
 		pool.add(item)
@@ -33,7 +35,7 @@ class ItemPoolTest extends Specification {
 	def "remove item should unsubscribe"() {
 		given:
 		def pool = new ItemPool()
-		def item = new MockTaggedItem()
+		def item = new MockTaggedItem(Mock(EventSource), Mock(EventSource))
 
 		and:
 		pool.add(item)
@@ -42,13 +44,14 @@ class ItemPoolTest extends Specification {
 		pool.remove(item)
 
 		then:
-		item.hasUnSubscribedWith(pool)
+		1 * item.onAdd.unsubscribe(_)
+		1 * item.onRemove.unsubscribe(_)
 	}
 
 	def "remove should remove item"() {
 		given:
 		def pool = new ItemPool()
-		def item = new MockTaggedItem()
+		def item = new MockTaggedItem(Mock(EventSource), Mock(EventSource))
 
 		and:
 		pool.add(item)
@@ -65,7 +68,7 @@ class ItemPoolTest extends Specification {
 	def "clear should unsubscribe"() {
 		given:
 		def pool = new ItemPool()
-		def item = new MockTaggedItem()
+		def item = new MockTaggedItem(Mock(EventSource), Mock(EventSource))
 
 		and:
 		pool.add(item)
@@ -74,13 +77,14 @@ class ItemPoolTest extends Specification {
 		pool.clear()
 
 		then:
-		item.hasUnSubscribedWith(pool)
+		1 * item.onAdd.unsubscribe(_)
+		1 * item.onRemove.unsubscribe(_)
 	}
 
 	def "clear should remove item"() {
 		given:
 		def pool = new ItemPool()
-		def item = new MockTaggedItem()
+		def item = new MockTaggedItem(Mock(EventSource), Mock(EventSource))
 
 		and:
 		pool.add(item)
@@ -96,9 +100,9 @@ class ItemPoolTest extends Specification {
 	def "filter should return correct items"() {
 		given:
 		def pool = new ItemPool()
-		def item1 = new MockTaggedItem("1 2")
-		def item2 = new MockTaggedItem("2 3")
-		def item3 = new MockTaggedItem("3 4")
+		def item1 = new MockTaggedItem(Mock(EventSource), Mock(EventSource), "1 2")
+		def item2 = new MockTaggedItem(Mock(EventSource), Mock(EventSource), "2 3")
+		def item3 = new MockTaggedItem(Mock(EventSource), Mock(EventSource), "3 4")
 
 		and:
 		pool.add(item1)
