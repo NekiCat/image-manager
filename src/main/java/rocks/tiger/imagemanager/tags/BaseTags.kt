@@ -2,7 +2,7 @@ package rocks.tiger.imagemanager.tags
 
 import rocks.tiger.imagemanager.EventSourceContainer
 
-class Tags() : HashSet<Tag>() {
+class BaseTags() : HashSet<Tag>() {
 	private val addEvent = EventSourceContainer<Tag>()
 	private val removeEvent = EventSourceContainer<Tag>()
 

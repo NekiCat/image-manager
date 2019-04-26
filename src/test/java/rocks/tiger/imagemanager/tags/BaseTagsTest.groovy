@@ -3,10 +3,10 @@ package rocks.tiger.imagemanager.tags
 import kotlin.jvm.functions.Function1
 import spock.lang.Specification
 
-class TagsTest extends Specification {
+class BaseTagsTest extends Specification {
 	def "constructor should take tags"() {
 		when:
-		def tags = new Tags("these are tags")
+		def tags = new BaseTags("these are tags")
 
 		then:
 		tags.size() == 3
@@ -17,7 +17,7 @@ class TagsTest extends Specification {
 
 	def "toString should make tags"() {
 		given:
-		def tags = new Tags()
+		def tags = new BaseTags()
 
 		and:
 		tags.add(new Tag("tag1"))
@@ -30,7 +30,7 @@ class TagsTest extends Specification {
 
 	def "should save tags"() {
 		given:
-		def tags = new Tags()
+		def tags = new BaseTags()
 		def tag = new Tag("tag")
 
 		when:
@@ -43,7 +43,7 @@ class TagsTest extends Specification {
 
 	def "should save tags only once"() {
 		given:
-		def tags = new Tags()
+		def tags = new BaseTags()
 		def tag = new Tag("tag")
 
 		when:
@@ -56,7 +56,7 @@ class TagsTest extends Specification {
 
 	def "should notify addAll"() {
 		given:
-		def tags = new Tags()
+		def tags = new BaseTags()
 		def tag = new Tag("tag")
 		def subscriber = Mock(Function1)
 		tags.onAdd.subscribe(subscriber)
@@ -70,7 +70,7 @@ class TagsTest extends Specification {
 
 	def "should notify remove"() {
 		given:
-		def tags = new Tags()
+		def tags = new BaseTags()
 		def tag = new Tag("tag")
 		def subscriber = Mock(Function1)
 		tags.onRemove.subscribe(subscriber)
@@ -88,7 +88,7 @@ class TagsTest extends Specification {
 
 	def "should notify remove on clear"() {
 		given:
-		def tags = new Tags()
+		def tags = new BaseTags()
 		def subscriber = Mock(Function1)
 		tags.onRemove.subscribe(subscriber)
 		tags.addAll([new Tag("1"), new Tag("2"), new Tag("3")])
