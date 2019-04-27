@@ -2,12 +2,12 @@ package rocks.tiger.imagemanager.tags
 
 import rocks.tiger.imagemanager.EventSourceContainer
 
-class BaseTags() : HashSet<Tag>() {
+class BaseTags() : MutableTags, HashSet<Tag>() {
 	private val addEvent = EventSourceContainer<Tag>()
 	private val removeEvent = EventSourceContainer<Tag>()
 
-	val onAdd = addEvent.source
-	val onRemove = removeEvent.source
+	override val onAdd = addEvent.source
+	override val onRemove = removeEvent.source
 
 	constructor(tags: String) : this() {
 		addAll(tags)
@@ -22,8 +22,8 @@ class BaseTags() : HashSet<Tag>() {
 		return result
 	}
 
-	fun addAll(tags: String) {
-		tags.trim().split("\\s+".toRegex()).map { Tag(it) }.forEach { this.add(it) }
+	override fun addAll(tags: String) {
+		tags.trim().split("\\s+".toRegex()).map { Tag(it) }.forEach { add(it) }
 	}
 
 	override fun remove(element: Tag): Boolean {
